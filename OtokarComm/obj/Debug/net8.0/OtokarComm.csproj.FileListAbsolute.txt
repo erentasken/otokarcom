@@ -1,0 +1,14 @@
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\bin\Debug\net8.0\OtokarComm.exe
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\bin\Debug\net8.0\OtokarComm.deps.json
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\bin\Debug\net8.0\OtokarComm.runtimeconfig.json
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\bin\Debug\net8.0\OtokarComm.dll
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\bin\Debug\net8.0\OtokarComm.pdb
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.AssemblyInfoInputs.cache
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.AssemblyInfo.cs
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.csproj.CoreCompileInputs.cache
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.dll
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\refint\OtokarComm.dll
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.pdb
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\OtokarComm.genruntimeconfig.cache
+C:\Users\erenn\source\repos\OtokarComm\OtokarComm\obj\Debug\net8.0\ref\OtokarComm.dll

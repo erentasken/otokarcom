@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "OtokarComm/1.0.0": {
+        "runtime": {
+          "OtokarComm.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "OtokarComm/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
