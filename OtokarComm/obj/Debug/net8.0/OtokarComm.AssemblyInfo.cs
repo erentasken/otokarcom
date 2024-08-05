@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OtokarComm")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+49bd7068e174798b1a9ace4e3e575f7ed5c4244c")]
 [assembly: System.Reflection.AssemblyProductAttribute("OtokarComm")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OtokarComm")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

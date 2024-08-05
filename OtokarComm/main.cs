@@ -5,21 +5,29 @@ using System.Net.Sockets;
 using System.Text;
 
 const int PORT = 1111;
-const string IP = "192.168.43.17";
-const int CONNECTIONS = 10;
+const string IP = "192.168.97.227";
 
 try
 {
     // Start the mock message sender thread
-    
-    for (int i = 0; i < 5; i++)
+
+    Task.Run(() =>
     {
-        Task.Run(() => SendMockMessages());
+        for (int i = 0; i < 15; i++)
+        {
+            Task.Run(() => SendMockMessages());
+        }
+    });
+
+    SocketManager listenModule = new SocketManager(IP, PORT);
+
+    while (true)
+    {
+        Thread.Sleep(3000);
+        test(listenModule);
+
     }
 
-    SocketManager listenModule = new SocketManager(IP, PORT, CONNECTIONS);
-
-    test(listenModule);
 }
 catch (Exception e)
 {
@@ -33,11 +41,11 @@ while (true)
 
 static void test(SocketManager listenModule)
 {
-    int time = 10;
+    int time = 3;
 
-    var devices = listenModule.devices;
+    var devices = listenModule._devices;
 
-    Console.WriteLine("Waiting for devices to connect...");
+    Console.WriteLine("Message publishing has initialized...");
 
     while (time > 0)
     {
@@ -45,32 +53,30 @@ static void test(SocketManager listenModule)
         Thread.Sleep(1000);
     }
 
-    Console.WriteLine("Broadcast is starting...");
-    Thread.Sleep(2000);
-    // Broadcast test
-    listenModule.Broadcast("Broadcast message<EOF>");
 
-    Console.WriteLine("Multicast is starting...");
-    Thread.Sleep(2000);
+    Console.WriteLine("Multicast");
     if (devices.Count < 5)
     {
         Console.WriteLine("Not enough devices to multicast.");
         return;
     }
-    // Multicast test
-    MulticastDTO multcast = new MulticastDTO(devices.GetRange(2, 3), "slmITS ME<EOF>");
+    MulticastDTO multcast = new MulticastDTO(devices.GetRange(2, 3), "ITS ME MULTICAST<EOF>");
     listenModule.Multicast(multcast);
 
-    
+    Thread.Sleep(3000);
+
+
+    Console.WriteLine("Broadcast");
+    listenModule.Broadcast("Broadcast message<EOF>");
+
 }
 
 // DEVICE SIMULATION 
 static void SendMockMessages()
 {
-
     Random random = new Random();
 
-    int randomInt = (random.Next() % 15 + 1) * 1000;
+    int randomInt = (random.Next() % 3 + 1) * 1000;
 
     Thread.Sleep(randomInt);
 
@@ -84,18 +90,27 @@ static void SendMockMessages()
 
 
         sender.Connect(remoteEP);
+        /*
+                if (sender.Connected)
+                {
+                    string message = "testMsg<EOF>";
+                    byte[] msg = Encoding.ASCII.GetBytes(message);
+                    sender.Send(msg);
+                }*/
 
-        if (sender.Connected)
+        while (true)
         {
-            string message = "slm<EOF>";
-            byte[] msg = Encoding.ASCII.GetBytes(message);
-            sender.Send(msg);
+
         }
 
-        while ( true )
+        /*while (true)
         {
-
-        }
+            randomInt = (random.Next() % 15 + 1) * 1000;
+            Thread.Sleep(randomInt);
+            sender.Shutdown(SocketShutdown.Both);
+            sender.Disconnect(true);
+            return;
+        }*/
     }
     catch (Exception e)
     {

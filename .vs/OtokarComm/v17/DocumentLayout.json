@@ -13,10 +13,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{7904E87B-B69D-46D6-999A-B4AF4A0D7C17}|OtokarComm\\OtokarComm.csproj|c:\\users\\erenn\\source\\repos\\otokarcomm\\otokarcomm\\model\\multicastdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7904E87B-B69D-46D6-999A-B4AF4A0D7C17}|OtokarComm\\OtokarComm.csproj|solutionrelative:otokarcomm\\model\\multicastdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7904E87B-B69D-46D6-999A-B4AF4A0D7C17}|OtokarComm\\OtokarComm.csproj|c:\\users\\erenn\\source\\repos\\otokarcomm\\otokarcomm\\model\\device.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7904E87B-B69D-46D6-999A-B4AF4A0D7C17}|OtokarComm\\OtokarComm.csproj|solutionrelative:otokarcomm\\model\\device.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,21 +21,9 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 234,
-          "SelectedChildIndex": 1,
+          "DockedWidth": 246,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Device.cs",
-              "DocumentMoniker": "C:\\Users\\erenn\\source\\repos\\OtokarComm\\OtokarComm\\Model\\Device.cs",
-              "RelativeDocumentMoniker": "OtokarComm\\Model\\Device.cs",
-              "ToolTip": "C:\\Users\\erenn\\source\\repos\\OtokarComm\\OtokarComm\\Model\\Device.cs",
-              "RelativeToolTip": "OtokarComm\\Model\\Device.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAYwBQAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-31T13:26:04.217Z"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 1,
@@ -48,7 +32,7 @@
               "RelativeDocumentMoniker": "OtokarComm\\main.cs",
               "ToolTip": "C:\\Users\\erenn\\source\\repos\\OtokarComm\\OtokarComm\\main.cs",
               "RelativeToolTip": "OtokarComm\\main.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAQAAAASAAAA",
+              "ViewState": "AQIAAEoAAAAAAAAAAAAQwGoAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-31T21:44:35.721Z",
               "EditorCaption": ""
@@ -56,7 +40,7 @@
           ]
         },
         {
-          "DockedWidth": 254,
+          "DockedWidth": 242,
           "SelectedChildIndex": 1,
           "Children": [
             {
@@ -67,10 +51,9 @@
               "RelativeDocumentMoniker": "OtokarComm\\Model\\MulticastDTO.cs",
               "ToolTip": "C:\\Users\\erenn\\source\\repos\\OtokarComm\\OtokarComm\\Model\\MulticastDTO.cs",
               "RelativeToolTip": "OtokarComm\\Model\\MulticastDTO.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAUAAAAeAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-08-01T08:09:19.083Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-08-01T08:09:19.083Z"
             },
             {
               "$type": "Document",
@@ -80,7 +63,7 @@
               "RelativeDocumentMoniker": "OtokarComm\\Comm\\socket.cs",
               "ToolTip": "C:\\Users\\erenn\\source\\repos\\OtokarComm\\OtokarComm\\Comm\\socket.cs",
               "RelativeToolTip": "OtokarComm\\Comm\\socket.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAlAAAA",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAowKQAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-01T12:39:53.461Z",
               "EditorCaption": ""

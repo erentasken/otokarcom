@@ -1,178 +1,221 @@
-﻿using OtokarComm.Model;
+﻿
+using OtokarComm.Model;
+using System.Data;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
 
 namespace OtokarComm.Comm
 {
     public class SocketManager
     {
-        private Socket? socket;
-        private string _endpoint;
-        private int _port;
-        private int _connections;
+        private Socket? _socket;
+        private readonly string _endpoint;
+        private readonly int _port;
 
-        public List<Device> devices = new List<Device>();
-
+        public readonly List<Device> _devices = new List<Device>();
         private readonly object _deviceLock = new object();
 
-        public SocketManager(string endpoint, int port, int connections)
+        public SocketManager(string endpoint, int port)
         {
-            this._endpoint = endpoint;
-            this._port = port;
-            this._connections = connections;
+            _endpoint = endpoint;
+            _port = port;
 
-             if (!establishConn())
-            {
-                Console.WriteLine("Failed to establish connection.");
-            }else
+            if (EstablishConnection())
             {
                 Console.WriteLine("Connection established.");
+                Task.Run(() => ListenForClients());
             }
-
-            Task.Run(() => listenClient());
-        }
-
-        private void listenClient()
-        {
-            Console.WriteLine("Listening on {0}:{1}", this._endpoint, this._port);
-
-            while (true)
+            else
             {
-
-                if( this.socket == null)
-                {
-                    Console.WriteLine("Socket is not bound.");
-                    return;
-                }
-
-                Socket client = this.socket.Accept();
-
-                lock (this._deviceLock)
-                {
-                    var device = new Device(
-                        client.RemoteEndPoint.ToString(),
-                        "00:00:00:00:00",
-                        client,
-                        true
-                    );
-
-                    devices.Add(device);
-                }
-
-                client.Send(Encoding.ASCII.GetBytes("Hello from server"));
-
-
-                Console.WriteLine("Client connected -> {0} ", client.RemoteEndPoint.ToString());
-
-                Task.Run(() => handleData(client));
+                Console.WriteLine("Failed to establish connection.");
             }
         }
-        private bool establishConn()
+
+        private bool EstablishConnection()
         {
-            IPAddress parsedIP = IPAddress.Parse(this._endpoint);
-            IPEndPoint localEndPoint = new IPEndPoint(parsedIP, this._port);
-
-            this.socket = new Socket(parsedIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-
             try
             {
-                this.socket.Bind(localEndPoint);
-                this.socket.Listen(this._connections);
+                var parsedIP = IPAddress.Parse(_endpoint);
+                var localEndPoint = new IPEndPoint(parsedIP, _port);
+
+                _socket = new Socket(parsedIP.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                _socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.KeepAlive, true);
+
+                _socket.Bind(localEndPoint);
+                _socket.Listen(10);
+                return true;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine($"Error establishing connection: {ex}");
                 return false;
             }
-
-            return true;
         }
 
-        private void handleData(Socket clientSocket)
+        private void ListenForClients()
         {
+            Console.WriteLine($"Listening on {_endpoint}:{_port}");
+
+
             while (true)
             {
                 try
                 {
-                    byte[] bytes = new Byte[1024];
-
-                    string data = null;
-
-                    int numByte = clientSocket.Receive(bytes);
-
-                    data += Encoding.ASCII.GetString(bytes, 0, numByte);
-
-                    Console.WriteLine("Data received: {0} from {1}", data, clientSocket.RemoteEndPoint.ToString());
-                }
-                catch (Exception e)
-                {
-                    if (devices != null)
+                    if (_socket == null)
                     {
-                        devices.Where(x => x.socket == clientSocket).FirstOrDefault().isActive = false;
-                    }else
-                    {
-                        Console.WriteLine(e.ToString());
+                        Console.WriteLine("Socket is not bound.");
+                        return;
                     }
 
-                    Console.WriteLine("Client disconnected.");
-                    return;
+                    var clientSocket = _socket.Accept();
+
+
+                    lock (_deviceLock)
+                    {
+                        var device = new Device(clientSocket.RemoteEndPoint?.ToString() ?? "Unknown", "00:00:00:00:00", clientSocket);
+                        _devices.Add(device);
+                    }
+
+                    Console.WriteLine($"Client connected: {clientSocket.RemoteEndPoint}");
+
+                    Task.Run(() => HandleClientData(clientSocket));
+                }
+                catch (SocketException ex)
+                {
+                    Console.WriteLine($"Socket exception: {ex.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Unexpected exception: {ex.Message}");
                 }
             }
         }
 
-        public void Broadcast(string data)
+        private void HandleClientData(Socket clientSocket)
         {
-            if (this.socket == null)
+            while ( true )
+            {
+                try
+                {
+                    byte[] buffer = new byte[1024];
+                    int receivedBytes = clientSocket.Receive(buffer);
+
+                    if (receivedBytes > 0)
+                    {
+                        var receivedData = Encoding.ASCII.GetString(buffer, 0, receivedBytes);
+                        Console.WriteLine($"Data received: {receivedData} from {clientSocket.RemoteEndPoint}");
+                    }
+                }
+                catch (SocketException ex)
+                {
+                    DisconnectClient(clientSocket);
+                }
+            }
+            
+            
+
+        }
+
+        private void DisconnectClient(Socket clientSocket)
+        {
+
+            string endPoint = clientSocket.RemoteEndPoint.ToString();
+            lock (_deviceLock)
+            {
+                var device = _devices.FirstOrDefault(d => d.socket == clientSocket);
+                if (device != null)
+                {
+                    _devices.Remove(device);
+                }
+            }
+
+            try
+            {
+                clientSocket.Shutdown(SocketShutdown.Both);
+                clientSocket.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Client disconnected already : {clientSocket.RemoteEndPoint}");
+                return;
+            }
+            Console.WriteLine("Disconnecting client...: {0}", endPoint);
+
+
+        }
+
+        public void Broadcast(string message)
+        {
+            if (_socket == null)
             {
                 Console.WriteLine("Socket is not bound.");
                 return;
             }
 
-            byte[] msg = Encoding.ASCII.GetBytes(data);
+            byte[] messageBytes = Encoding.ASCII.GetBytes(message);
 
-            foreach (Device device in devices)
+            lock (_deviceLock)
             {
-                if (device.isActive)
+                foreach (var device in _devices)
                 {
-                    Console.WriteLine("BROADCAST ==> Message sent. Message: {0} | ReceivedBy: {1}", msg, device.EndPoint);
-                    device.socket.Send(msg);
+                    try
+                    {
+                        if (device.socket == null)
+                        {
+                            Console.WriteLine("Socket is null.");
+                            continue;
+                        }
+
+                        device.socket.Send(messageBytes);
+
+                        Console.WriteLine($"Broadcast message sent to {device.EndPoint}");
+                    }
+                    catch (SocketException ex)
+                    {
+
+                        Console.WriteLine($"Failed to send message to {device.EndPoint}, {ex.ErrorCode}");
+                    }
                 }
             }
         }
 
         public void Multicast(MulticastDTO multicast)
         {
-            if (this.socket == null)
+            if (_socket == null)
             {
                 Console.WriteLine("Socket is not bound.");
                 return;
             }
 
-            if (multicast== null)
+            if (multicast == null || multicast._devices == null || multicast._devices.Count == 0)
             {
                 Console.WriteLine("IP list is empty.");
                 return;
             }
 
-            byte[] msg = Encoding.ASCII.GetBytes(multicast._message);
+            byte[] messageBytes = Encoding.ASCII.GetBytes(multicast._message);
 
-
-            foreach (Device device in devices)
+            lock (_deviceLock)
             {
-                if (multicast._devices.Contains(device))
+                foreach (var device in _devices)
                 {
-                    if (device.isActive == true)
+                    if (multicast._devices.Contains(device))
                     {
-                        Console.WriteLine("MULTICAST ==> Message sent. Message: {0} | ReceivedBy: {1}", msg,device.EndPoint);
-                        device.socket.Send(msg);
+                        try
+                        {
+                            device.socket.Send(messageBytes);
+                            Console.WriteLine($"Multicast message sent to {device.EndPoint}");
+                        }
+                        catch (SocketException ex)
+                        {
+                            Console.WriteLine($"Failed to send message to {device.EndPoint}");
+                        }
                     }
-
                 }
             }
-
         }
-
     }
 }
+
+
