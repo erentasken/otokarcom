@@ -112,9 +112,6 @@ namespace OtokarComm.Comm
                     DisconnectClient(clientSocket);
                 }
             }
-            
-            
-
         }
 
         private void DisconnectClient(Socket clientSocket)

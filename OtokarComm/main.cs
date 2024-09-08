@@ -5,7 +5,9 @@ using System.Net.Sockets;
 using System.Text;
 
 const int PORT = 1111;
-const string IP = "192.168.97.227";
+const string IP = "192.168.1.137";
+
+bool runOnce = true;
 
 try
 {
@@ -39,11 +41,28 @@ while (true)
     Thread.Sleep(1000);
 }
 
-static void test(SocketManager listenModule)
+
+
+void test(SocketManager listenModule)
 {
+
     int time = 3;
 
+    // !!!!
     var devices = listenModule._devices;
+    //
+
+
+    Console.WriteLine("Devices List: ");
+
+    if (runOnce)
+    {
+        runOnce = false;
+        for (int i = 0; i < devices.Count; i++)
+        {
+            Console.WriteLine(" Device: {0}, Device Index: {1}" , devices.ElementAt(i).EndPoint, i);
+        }
+    }
 
     Console.WriteLine("Message publishing has initialized...");
 
@@ -60,15 +79,19 @@ static void test(SocketManager listenModule)
         Console.WriteLine("Not enough devices to multicast.");
         return;
     }
-    MulticastDTO multcast = new MulticastDTO(devices.GetRange(2, 3), "ITS ME MULTICAST<EOF>");
+
+    //!!!!
+    MulticastDTO multcast = new MulticastDTO(devices.GetRange(2, 4), "ITS ME MULTICAST<EOF>");
     listenModule.Multicast(multcast);
+    //
 
     Thread.Sleep(3000);
 
 
     Console.WriteLine("Broadcast");
+    //!!!
     listenModule.Broadcast("Broadcast message<EOF>");
-
+    //
 }
 
 // DEVICE SIMULATION 
